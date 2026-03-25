@@ -71,24 +71,15 @@ The bridge network is a UNet with:
 - **Cloud masks:** Generated via a pretrained UNet segmentation model
 - **Candidate datasets:** SEN12MS-CR, SEN12MS-CR-TS (multi-temporal)
 
-## Project Status
-
-🚧 **Work in progress**
-
-- [x] Problem formulation and architecture design
-- [ ] Data pipeline (Sentinel-1/2 pair acquisition and preprocessing)
-- [ ] Autoencoder training / adaptation for satellite bands
-- [ ] I²SB bridge network implementation
-- [ ] SAR cross-attention conditioning module
-- [ ] Training loop and evaluation metrics (PSNR, SSIM, SAM, LPIPS)
-- [ ] Patch-based inference with tile blending for full-scene reconstruction
-- [ ] Ablation studies and benchmarking
-
 ## References
 
 - Liu et al., _I²SB: Image-to-Image Schrödinger Bridge_ (ICML 2023)
 - Rombach et al., _High-Resolution Image Synthesis with Latent Diffusion Models_ (CVPR 2022)
 - Ebel et al., _SEN12MS-CR-TS: A Multi-Temporal Cloud Removal Dataset_ (IEEE TGRS 2022)
+- _Multimodal Diffusion Bridge with Attention-Based SAR Fusion for Satellite Image Cloud Removal_
+- _SAR-to-RGB Translation with Latent Diffusion for Earth Observation_
+- _SAR-DeCR: Latent Diffusion for SAR-Fused Thick Cloud Removal_
+- _Cloud-Aware SAR Fusion for Enhanced Optical Sensing in Space Missions_
 
 ## License
 
