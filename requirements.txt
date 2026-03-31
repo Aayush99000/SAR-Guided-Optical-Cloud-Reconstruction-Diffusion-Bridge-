@@ -1,8 +1,43 @@
-# Python 3.12 compatible requirements
-# See compatibility notes below
+# ============================================================
+# Adaptive Mamba-Bridge (AMB) — Requirements
+# Python 3.12 compatible
+# ============================================================
 
-torch>=2.2.0       # 2.2.0 is the first release with cp312 wheels (2.1.x has none)
-torchvision>=0.17.0  # 0.17.0 is the first release with cp312 wheels (0.16.x has none)
-einops>=0.7.0      # Pure-Python package; 0.7.0 works on 3.12 (no compiled extensions)
-rasterio>=1.3.9    # 1.3.9 is the first 1.3.x release with cp312 wheels
-numpy>=1.26.0      # 1.26.0 is the first numpy release with cp312 wheels (1.24/1.25 have none)
+# --- Core Deep Learning ---
+torch>=2.2.0        # 2.2.0 is the first release with cp312 wheels
+torchvision>=0.17.0 # must match torch: 2.2.x <-> 0.17.x
+einops>=0.7.0       # tensor rearrangement (used in vision_mamba.py)
+
+# --- Mamba / SSM ---
+mamba-ssm>=1.2.0    # official Mamba selective SSM kernels (CUDA required)
+causal-conv1d>=1.2.0 # required dependency of mamba-ssm
+
+# --- Geospatial / Remote Sensing ---
+rasterio>=1.3.9     # read/write GeoTIFF satellite imagery (cp312 wheels from 1.3.9)
+GDAL>=3.4.0         # rasterio backend; install via conda recommended
+
+# --- Numerical ---
+numpy>=1.26.0       # cp312 wheels from 1.26.0
+
+# --- Data Augmentation ---
+albumentations>=1.4.0  # satellite image augmentation (flips, rotations, elastic)
+
+# --- Dataset (Sen12MS-CR uses HDF5 format) ---
+h5py>=3.10.0        # read .h5 patch files from Sen12MS-CR
+
+# --- Experiment Tracking ---
+tensorboard>=2.15.0 # loss curves, image grids, metric logging
+wandb>=0.16.0       # optional: Weights & Biases experiment tracking
+
+# --- Progress & Utilities ---
+tqdm>=4.66.0        # progress bars for training/inference loops
+
+# --- Visualization ---
+matplotlib>=3.8.0   # plot reconstructed images, metric curves
+Pillow>=10.0.0      # image I/O for saving PNG previews
+
+# --- Metrics ---
+torchmetrics>=1.3.0 # PSNR, SSIM, SAM implementations with GPU support
+
+# --- Segmentation (Frozen Judge / Tier 2 Validation) ---
+segmentation-models-pytorch>=0.3.3  # pre-trained land cover segmentation models
