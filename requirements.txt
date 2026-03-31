@@ -9,8 +9,12 @@ torchvision>=0.17.0 # must match torch: 2.2.x <-> 0.17.x
 einops>=0.7.0       # tensor rearrangement (used in vision_mamba.py)
 
 # --- Mamba / SSM ---
-mamba-ssm>=1.2.0    # official Mamba selective SSM kernels (CUDA required)
-causal-conv1d>=1.2.0 # required dependency of mamba-ssm
+# mamba-ssm and causal-conv1d require NVCC (CUDA compiler) and only work on Linux + NVIDIA GPU.
+# Do NOT install on macOS or CPU-only machines — the project will use the pure-Python SSM fallback.
+# On a Linux CUDA machine, uncomment and install these for full hardware-accelerated Mamba kernels:
+#
+#   pip install causal-conv1d>=1.2.0
+#   pip install mamba-ssm>=1.2.0
 
 # --- Geospatial / Remote Sensing ---
 rasterio>=1.3.9     # read/write GeoTIFF satellite imagery (cp312 wheels from 1.3.9)

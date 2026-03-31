@@ -19,6 +19,16 @@ import torch.nn.functional as F
 import math
 from einops import rearrange
 
+# mamba-ssm provides optimized CUDA kernels for the SSM scan.
+# It requires NVCC and only works on Linux + NVIDIA GPU.
+# On macOS or CPU-only machines it will not be available — the pure-Python
+# SelectiveSSM class below is used as the fallback automatically.
+try:
+    from mamba_ssm import Mamba as MambaCUDA
+    _MAMBA_CUDA_AVAILABLE = True
+except ImportError:
+    _MAMBA_CUDA_AVAILABLE = False
+
 
 # ---------------------------------------------------------------------------
 # Selective State Space Model (S6) — Core Mamba Operation
@@ -95,9 +105,14 @@ class BidirectionalMambaBlock(nn.Module):
         self.norm = nn.LayerNorm(d_model)
         self.in_proj = nn.Linear(d_model, d_inner * 2, bias=False)  # x2: one for gate
 
-        # Forward and backward SSMs
-        self.ssm_fwd = SelectiveSSM(d_inner, d_state)
-        self.ssm_bwd = SelectiveSSM(d_inner, d_state)
+        # Use optimized CUDA Mamba kernels when available (Linux + NVIDIA GPU),
+        # otherwise fall back to the pure-Python SelectiveSSM (macOS / CPU).
+        if _MAMBA_CUDA_AVAILABLE:
+            self.ssm_fwd = MambaCUDA(d_model=d_inner, d_state=d_state, d_conv=4, expand=1)
+            self.ssm_bwd = MambaCUDA(d_model=d_inner, d_state=d_state, d_conv=4, expand=1)
+        else:
+            self.ssm_fwd = SelectiveSSM(d_inner, d_state)
+            self.ssm_bwd = SelectiveSSM(d_inner, d_state)
 
         self.conv = nn.Conv1d(d_inner, d_inner, 3, padding=1, groups=d_inner)
         self.act = nn.SiLU()
